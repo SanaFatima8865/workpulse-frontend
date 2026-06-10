@@ -5,8 +5,8 @@ import type { AxiosError } from 'axios';
 import type { ApiResponse } from '@workpulse/shared';
 import { useAppSelector } from '@/store';
 import { selectActiveWorkspace } from '@/store/workspaceSlice';
-import { aiApi }  from '../api/aiApi';
-import type { ChatMessage, AIInsightData } from '../api/aiApi';
+import { aiApi } from '../api/aiApi';
+import type { ChatMessage } from '../api/aiApi';
 
 const errMsg = (e: unknown) => {
   const ax = e as AxiosError<ApiResponse>;
@@ -21,7 +21,7 @@ export const useProjectSummary = (projectId: string, enabled = true) => {
   const wsId = useWsId();
   return useQuery({
     queryKey:  ['ai', wsId, projectId, 'summary'],
-    queryFn:   () => aiApi.getProjectSummary(projectId, wsId).then(r => r.data!),
+    queryFn:   () => aiApi.getSummary(projectId, wsId).then(r => r.data!),
     enabled:   !!wsId && !!projectId && enabled,
     staleTime: 60 * 60 * 1000,
     retry:     1,
@@ -31,8 +31,8 @@ export const useProjectSummary = (projectId: string, enabled = true) => {
 // ─── Risk Analysis ────────────────────────────────────────────────────────────
 
 export const useRiskAnalysis = (projectId: string, enabled = true) => {
-  const wsId  = useWsId();
-  const qc    = useQueryClient();
+  const wsId = useWsId();
+  const qc   = useQueryClient();
   const query = useQuery({
     queryKey:  ['ai', wsId, projectId, 'risks'],
     queryFn:   () => aiApi.getRisks(projectId, wsId).then(r => r.data!),
@@ -42,7 +42,7 @@ export const useRiskAnalysis = (projectId: string, enabled = true) => {
   });
 
   const refresh = useMutation({
-    mutationFn: () => aiApi.getRisks(projectId, wsId, true).then(r => r.data!),
+    mutationFn: () => aiApi.getRisks(projectId, wsId).then(r => r.data!),
     onSuccess:  (data) => {
       qc.setQueryData(['ai', wsId, projectId, 'risks'], data);
       toast.success('Risk analysis refreshed');
@@ -59,7 +59,7 @@ export const useHealthExplanation = (projectId: string, enabled = true) => {
   const wsId = useWsId();
   return useQuery({
     queryKey:  ['ai', wsId, projectId, 'health'],
-    queryFn:   () => aiApi.getHealthExplanation(projectId, wsId).then(r => r.data!),
+    queryFn:   () => aiApi.getHealth(projectId, wsId).then(r => r.data!),
     enabled:   !!wsId && !!projectId && enabled,
     staleTime: 2 * 60 * 60 * 1000,
     retry:     1,
@@ -72,7 +72,7 @@ export const useBudgetForecast = (projectId: string, enabled = true) => {
   const wsId = useWsId();
   return useQuery({
     queryKey:  ['ai', wsId, projectId, 'budget'],
-    queryFn:   () => aiApi.getBudgetForecast(projectId, wsId).then(r => r.data!),
+    queryFn:   () => aiApi.forecastBudget(projectId, wsId).then(r => r.data!),
     enabled:   !!wsId && !!projectId && enabled,
     staleTime: 60 * 60 * 1000,
     retry:     1,
@@ -84,8 +84,7 @@ export const useBudgetForecast = (projectId: string, enabled = true) => {
 export const useGenerateTasks = (projectId: string) => {
   const wsId = useWsId();
   return useMutation({
-    mutationFn: (opts: { phase?: string; category?: string; count?: number }) =>
-      aiApi.generateTasks(projectId, wsId, opts).then(r => r.data!),
+    mutationFn: () => aiApi.generateTasks(projectId, wsId).then(r => r.data!),
     onError: (e) => toast.error(errMsg(e)),
   });
 };

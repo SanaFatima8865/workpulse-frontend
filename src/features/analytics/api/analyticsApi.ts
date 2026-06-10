@@ -24,6 +24,24 @@ export interface WorkspaceAnalytics {
   taskStats: { total: number; done: number; inProgress: number; blocked: number; overdue: number };
 }
 
+export interface PipelineStage  { _id: string; count: number; totalValue: number; avgHealth: number }
+export interface VelocityPoint  { date: string; created: number; completed: number }
+export interface WorkloadEntry  { userId: string; firstName: string; lastName: string; avatar?: string; totalTasks: number; overdueTasks: number }
+export interface WorkspaceSummary {
+  activeProjects: number; totalProjects: number; completedProjects: number;
+  totalContractValue: number; billedToDate: number;
+  completedTasks: number; totalTasks: number; overdueTasks: number;
+  avgHealthScore: number; atRiskProjects: number;
+  activeClients: number; totalClients: number;
+}
+export interface BudgetOverview {
+  topProjects: Array<{ _id: string; name: string; jobNumber: string; phase: string; contractValue: number; billedPct: number; coverColor: string }>;
+}
+export interface HealthBreakdown {
+  distribution: Array<{ range: string; count: number; color: string }>;
+  projects: Array<{ _id: string; name: string; coverColor: string; healthScore: number }>;
+}
+
 const withWs = (wsId: string) => ({ headers: { 'X-Workspace-ID': wsId } });
 
 export const analyticsApi = {
@@ -31,6 +49,18 @@ export const analyticsApi = {
     apiClient.get<ApiResponse<WorkspaceAnalytics>>('/analytics/workspace', withWs(wsId)).then(r => r.data),
   getProject: (projectId: string, wsId: string) =>
     apiClient.get<ApiResponse<Record<string,unknown>>>(`/analytics/project/${projectId}`, withWs(wsId)).then(r => r.data),
+  getDashboard: (wsId: string) =>
+    apiClient.get<ApiResponse<WorkspaceAnalytics>>('/analytics/workspace', withWs(wsId)).then(r => r.data),
+  getVelocity: (wsId: string, days = 14) =>
+    apiClient.get<ApiResponse<VelocityPoint[]>>(`/analytics/velocity?days=${days}`, withWs(wsId)).then(r => r.data),
+  getWorkload: (wsId: string) =>
+    apiClient.get<ApiResponse<WorkloadEntry[]>>('/analytics/workload', withWs(wsId)).then(r => r.data),
+  getHealth: (wsId: string) =>
+    apiClient.get<ApiResponse<HealthBreakdown>>('/analytics/health', withWs(wsId)).then(r => r.data),
+  getCrmFunnel: (wsId: string) =>
+    apiClient.get<ApiResponse<Record<string,unknown>>>('/analytics/crm-funnel', withWs(wsId)).then(r => r.data),
+  getInsights: (wsId: string) =>
+    apiClient.get<ApiResponse<Record<string,unknown>>>('/analytics/insights', withWs(wsId)).then(r => r.data),
 };
 
 const useWsId = () => useAppSelector(selectActiveWorkspace)?._id ?? '';

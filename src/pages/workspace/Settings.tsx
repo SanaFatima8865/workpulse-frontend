@@ -75,7 +75,7 @@ const WorkspaceSettingsPage: React.FC = () => {
   const updateWorkspace = useUpdateWorkspace(id);
   const deleteWorkspace = useDeleteWorkspace();
 
-  const myRole = workspace?.myRole;
+  const myRole = (workspace as any)?.myRole;
   const canEdit = myRole === 'owner' || myRole === 'admin';
 
   const { register, handleSubmit, formState: { errors, isDirty } } = useForm<FormData>({
@@ -85,11 +85,11 @@ const WorkspaceSettingsPage: React.FC = () => {
           name:        workspace.name,
           description: workspace.description ?? '',
           settings: {
-            defaultProjectView:                 workspace.settings.defaultProjectView ?? 'board',
-            allowGuestAccess:                   workspace.settings.allowGuestAccess ?? false,
-            requireApprovalForMaterialRequests: workspace.settings.requireApprovalForMaterialRequests ?? true,
-            timezone:                           workspace.settings.timezone ?? 'UTC',
-            currency:                           workspace.settings.currency ?? 'USD',
+            defaultProjectView:                 workspace.settings?.defaultProjectView ?? 'board',
+            allowGuestAccess:                   workspace.settings?.allowGuestAccess ?? false,
+            requireApprovalForMaterialRequests: workspace.settings?.requireApprovalForMaterialRequests ?? true,
+            timezone:                           workspace.settings?.timezone ?? 'UTC',
+            currency:                           workspace.settings?.currency ?? 'USD',
           },
         }
       : undefined,
@@ -287,7 +287,7 @@ const WorkspaceSettingsPage: React.FC = () => {
             {planLimits.members !== -1 && (
               <div className="px-5 py-3 border-b border-surface-border dark:border-surface-dark-border">
                 <Progress
-                  value={(workspace.memberCount / planLimits.members) * 100}
+                  value={((workspace?.memberCount ?? 0) / planLimits.members) * 100}
                   size="xs"
                   color="auto"
                   label={`${workspace.memberCount} / ${planLimits.members} members`}

@@ -189,10 +189,10 @@ const AnalyticsPage: React.FC = () => {
       {/* ── SECOND ROW KPIs ───────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: 'Pending COs',       value: portfolio.totalPendingCOs,   format: 'currency' as const, icon: <DollarSign size={18} />,   bg: 'bg-amber-100 text-amber-600', highlight: portfolio.totalPendingCOs > 0 ? 'warning' as const : undefined },
-          { label: 'Approved COs',      value: portfolio.totalApprovedCOs,  format: 'currency' as const, icon: <CheckCircle2 size={18} />,  bg: 'bg-emerald-100 text-emerald-600' },
-          { label: 'Collected to Date', value: portfolio.totalCollected,    format: 'currency' as const, icon: <TrendingUp size={18} />,    bg: 'bg-teal-100 text-teal-600' },
-          { label: 'Blocked Tasks',     value: taskStats.blocked,           format: 'number'   as const, icon: <AlertTriangle size={18} />, bg: 'bg-red-100 text-red-600', highlight: taskStats.blocked > 0 ? 'danger' as const : undefined },
+          { label: 'Pending COs',       value: portfolio.totalPendingCOs,   format: 'currency' as const, icon: <DollarSign size={18} />,   iconBg: 'bg-amber-100 text-amber-600', highlight: portfolio.totalPendingCOs > 0 ? 'warning' as const : undefined },
+          { label: 'Approved COs',      value: portfolio.totalApprovedCOs,  format: 'currency' as const, icon: <CheckCircle2 size={18} />,  iconBg: 'bg-emerald-100 text-emerald-600' },
+          { label: 'Collected to Date', value: portfolio.totalCollected,    format: 'currency' as const, icon: <TrendingUp size={18} />,    iconBg: 'bg-teal-100 text-teal-600' },
+          { label: 'Blocked Tasks',     value: taskStats.blocked,           format: 'number'   as const, icon: <AlertTriangle size={18} />, iconBg: 'bg-red-100 text-red-600', highlight: taskStats.blocked > 0 ? 'danger' as const : undefined },
         ].map((kpi, i) => (
           <KPICard key={kpi.label} {...kpi} index={i + 4} />
         ))}

@@ -1,5 +1,6 @@
 // Re-export all shared types for convenient use throughout the app
 export * from '@workpulse/shared';
+export * from './ui';
 
 // ─── UI State Types ───────────────────────────────────────────────────────────
 

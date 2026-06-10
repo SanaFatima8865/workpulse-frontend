@@ -38,7 +38,7 @@ export const boardApi = {
 export interface CreateTaskPayload {
   title: string; boardId: string; groupId: string; projectId: string;
   description?: string; priority?: string; assigneeIds?: string[];
-  dueDate?: string; estimatedHours?: number; tags?: string[];
+  dueDate?: string; estimatedHours?: number; tags?: string[]; labels?: string[];
 }
 
 export interface UpdateTaskPayload {

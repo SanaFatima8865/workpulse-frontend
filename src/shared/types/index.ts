@@ -56,6 +56,7 @@ export interface UserProfile extends UserBase {
   timezone: string;
   language: string;
   preferences: UserPreferences;
+  emailVerified?: boolean;
 }
 
 export interface UserPreferences {
@@ -87,6 +88,20 @@ export interface WorkspaceBase {
   ownerId: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface PublicWorkspace extends WorkspaceBase {
+  description?: string;
+  coverColor?: string;
+  memberCount?: number;
+  settings?: {
+    defaultProjectView?: 'board' | 'list' | 'table' | 'timeline';
+    allowGuestAccess?: boolean;
+    requireApprovalForMaterialRequests?: boolean;
+    timezone?: string;
+    dateFormat?: string;
+    currency?: string;
+  };
 }
 
 // ─── Project Types ─────────────────────────────────────────────────────────

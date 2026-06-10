@@ -110,13 +110,13 @@ const ChangeOrdersPage: React.FC = () => {
                 <span className="text-xs font-mono text-[var(--color-text-muted)] w-20 shrink-0">{co.coNumber}</span>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-[var(--color-text)] truncate">{co.title}</p>
-                  <p className="text-xs text-[var(--color-text-muted)] capitalize">{co.type.replace('_',' ')} · {co.lineItems.length} line item{co.lineItems.length !== 1 ? 's' : ''}</p>
+                  <p className="text-xs text-[var(--color-text-muted)] capitalize">{co.type.replace('_',' ')}</p>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
-                  {co.scheduleImpact !== 0 && <span className="text-xs text-[var(--color-text-muted)]">{co.scheduleImpact > 0 ? '+':''}{co.scheduleImpact}d</span>}
-                  <span className="text-sm font-bold text-[var(--color-text)]">{formatCurrency(co.totalCost)}</span>
+                  {co.scheduleDays !== 0 && <span className="text-xs text-[var(--color-text-muted)]">{co.scheduleDays > 0 ? '+':''}{co.scheduleDays}d</span>}
+                  <span className="text-sm font-bold text-[var(--color-text)]">{formatCurrency(co.costImpact)}</span>
                   <span className={cn('text-2xs font-medium px-1.5 py-0.5 rounded capitalize', CO_STATUS_COLORS[co.status])}>{co.status.replace('_',' ')}</span>
-                  {!co.isApproved && co.status !== 'rejected' && co.status !== 'void' && (
+                  {co.status !== 'approved' && co.status !== 'rejected' && co.status !== 'void' && (
                     <Button variant="primary" size="xs" onClick={(e) => { e.stopPropagation(); approveCO.mutate(co._id); }}>Approve</Button>
                   )}
                 </div>
@@ -186,7 +186,7 @@ const ChangeOrdersPage: React.FC = () => {
             <div className="flex items-center gap-2">
               <span className={cn('text-2xs font-medium px-1.5 py-0.5 rounded capitalize', CO_STATUS_COLORS[selectedCO.status])}>{selectedCO.status.replace('_',' ')}</span>
               <span className="text-2xs text-[var(--color-text-muted)] capitalize">{selectedCO.type.replace('_',' ')}</span>
-              {selectedCO.scheduleImpact !== 0 && <span className="text-2xs font-medium text-amber-600">{selectedCO.scheduleImpact > 0 ? '+':''}{selectedCO.scheduleImpact} days</span>}
+              {!!selectedCO.scheduleDays && <span className="text-2xs font-medium text-amber-600">{selectedCO.scheduleDays > 0 ? '+':''}{selectedCO.scheduleDays} days</span>}
             </div>
             {selectedCO.description && <p className="text-sm text-[var(--color-text)]">{selectedCO.description}</p>}
             <div className="border border-surface-border rounded-xl overflow-hidden">
@@ -195,12 +195,12 @@ const ChangeOrdersPage: React.FC = () => {
                   <tr><th className="text-left px-3 py-2">Description</th><th className="text-right px-3 py-2">Qty</th><th className="text-right px-3 py-2">Unit $</th><th className="text-right px-3 py-2">Total</th></tr>
                 </thead>
                 <tbody className="divide-y divide-surface-border">
-                  {selectedCO.lineItems.map((li, i) => (
+                  {(selectedCO.lineItems ?? []).map((li, i) => (
                     <tr key={i}><td className="px-3 py-2">{li.description}</td><td className="text-right px-3 py-2">{li.quantity} {li.unit}</td><td className="text-right px-3 py-2">{formatCurrency(li.unitCost)}</td><td className="text-right px-3 py-2 font-bold">{formatCurrency(li.totalCost)}</td></tr>
                   ))}
                   <tr className="bg-surface-secondary dark:bg-surface-dark-tertiary font-bold">
                     <td colSpan={3} className="px-3 py-2 text-right">Total</td>
-                    <td className="px-3 py-2 text-right">{formatCurrency(selectedCO.totalCost)}</td>
+                    <td className="px-3 py-2 text-right">{formatCurrency(selectedCO.totalCost ?? selectedCO.costImpact)}</td>
                   </tr>
                 </tbody>
               </table>

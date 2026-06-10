@@ -89,7 +89,7 @@ const PunchListPage: React.FC = () => {
           <>
             <span className="text-[var(--color-text-muted)]">|</span>
             {['all', ...trades].map(t => (
-              <button key={t} onClick={() => setTradeFilter(t)}
+              <button key={t} onClick={() => setTradeFilter(t as string)}
                 className={cn('px-2.5 py-1 rounded-full text-xs font-medium transition-all capitalize', tradeFilter === t ? 'bg-teal-600 text-white' : 'bg-surface-secondary text-[var(--color-text-secondary)] hover:bg-surface-tertiary')}>
                 {t}
               </button>

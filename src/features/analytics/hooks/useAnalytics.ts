@@ -11,8 +11,8 @@ export const useDashboard = () => {
     queryKey: ['analytics', wsId, 'dashboard'],
     queryFn:  () => analyticsApi.getDashboard(wsId).then(r => r.data!),
     enabled:  !!wsId,
-    staleTime: 60 * 1000,           // 1 min
-    refetchInterval: 5 * 60 * 1000, // auto-refresh every 5 min
+    staleTime: 60 * 1000,
+    refetchInterval: 5 * 60 * 1000,
   });
 };
 

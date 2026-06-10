@@ -28,6 +28,7 @@ import {
   useIncidents, useCreateIncident,
   usePunchList, useCreatePunchItem, useUpdatePunchItem,
 } from '@/features/construction/api/constructionApi';
+import type { TRFI, TPunchListItem } from '@/features/construction/api/constructionApi';
 
 const RFI_COLORS: Record<string,string>   = { open:'bg-blue-100 text-blue-700', answered:'bg-emerald-100 text-emerald-700', closed:'bg-gray-100 text-gray-600', draft:'bg-yellow-100 text-yellow-700', void:'bg-red-100 text-red-600' };
 const CO_COLORS: Record<string,string>    = { draft:'bg-gray-100 text-gray-600', pending_owner:'bg-amber-100 text-amber-700', pending_gc:'bg-blue-100 text-blue-700', approved:'bg-emerald-100 text-emerald-700', rejected:'bg-red-100 text-red-600', void:'bg-gray-100 text-gray-500' };
@@ -45,7 +46,7 @@ const TABS = [
 ] as const;
 type TabId = typeof TABS[number]['id'];
 
-const RFIRow: React.FC<{rfi: ReturnType<typeof useRFIs>['data'][0]}> = ({rfi}) => {
+const RFIRow: React.FC<{rfi: TRFI}> = ({rfi}) => {
   const [exp, setExp] = React.useState(false);
   const [resp, setResp] = React.useState('');
   const respond = useRespondToRFI();
@@ -102,7 +103,7 @@ const RFIRow: React.FC<{rfi: ReturnType<typeof useRFIs>['data'][0]}> = ({rfi}) =
   );
 };
 
-const PunchRow: React.FC<{item:ReturnType<typeof usePunchList>['data'][0]}> = ({item}) => {
+const PunchRow: React.FC<{item:TPunchListItem}> = ({item}) => {
   const update = useUpdatePunchItem();
   const NEXT: Record<string,string> = {open:'in_progress',in_progress:'completed',completed:'verified'};
   return (

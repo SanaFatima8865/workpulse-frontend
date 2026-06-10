@@ -35,7 +35,7 @@ const RFIDetailPanel: React.FC<{ rfi: PublicRFI; onClose: () => void; projectId:
 
   const handleRespond = () => {
     if (!responseText.trim()) return;
-    respond.mutate({ id: rfi._id, content: responseText }, { onSuccess: () => setResponseText('') });
+    respond.mutate({ rfiId: rfi._id, content: responseText, isOfficial: false }, { onSuccess: () => setResponseText('') });
   };
 
   return (
@@ -92,8 +92,8 @@ const RFIDetailPanel: React.FC<{ rfi: PublicRFI; onClose: () => void; projectId:
             : rfi.responses.map(resp => (
               <div key={resp._id} className="bg-surface-secondary dark:bg-surface-dark-tertiary rounded-xl p-3 mb-2">
                 <div className="flex items-center justify-between mb-1.5">
-                  <p className="text-xs font-semibold text-[var(--color-text)]">{resp.respondedBy.slice(-8)}</p>
-                  <p className="text-2xs text-[var(--color-text-muted)]">{formatRelative(resp.respondedAt)}</p>
+                  <p className="text-xs font-semibold text-[var(--color-text)]">{resp.responderId.slice(-8)}</p>
+                  <p className="text-2xs text-[var(--color-text-muted)]">{formatRelative(resp.createdAt)}</p>
                 </div>
                 <p className="text-xs text-[var(--color-text)] leading-relaxed whitespace-pre-wrap">{resp.content}</p>
               </div>
